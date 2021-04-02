@@ -7,15 +7,15 @@ const port = 8000;
 app.use(cors());
 
 app.get('/', (req, res) => {
-    res.send('Hello world');
+    res.send('Server is up and running.');
 })
 
 app.listen(port, () => {
     console.log(`listening in at http://localhost:${port}`);
 })
 
-let datga = null;
-const username = 'norogth';
+let data = null;
+const username = 'norogoth';
 const password = '44Gorkles^';
 
 let c = mysql.createConnection({
@@ -33,7 +33,19 @@ function getData() {
         }
         console.log('Connected to DB successfully.');
         c.query('SELECT * FROM bingo.bingo_values', function (e, result) {
-            
+            if (e) {
+                console.log("error with query: ",e);
+            }
+            data = result;
         })
     })
 }
+
+app.get('/bingo_values', (req, res) => {
+    getData();
+    return res.status(200).send({
+        success: 'true',
+        message: 'users',
+        data: data
+    })
+})
